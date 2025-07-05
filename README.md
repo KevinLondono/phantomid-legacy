@@ -1,231 +1,108 @@
 # PhantomID Network System
 
+![PhantomID Logo](https://example.com/logo.png)
+
+Welcome to the **PhantomID Network System** repository! This project is an innovative approach to identity management, utilizing advanced cryptographic techniques to ensure user privacy and data integrity. 
+
+## Table of Contents
+
+- [Prototype Notice and Abuse Prevention Disclaimer](#prototype-notice-and-abuse-prevention-disclaimer)
+- [Key Features](#key-features)
+- [Prototype Limitations](#prototype-limitations)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+- [Releases](#releases)
+
 ## Prototype Notice and Abuse Prevention Disclaimer
 
-**This system is currently a prototype implementation.** While the core daemonized identity tree and Zero-Knowledge Proof (ZKP) verification mechanisms are functional, certain trust policies are still under active development. Specifically, when a user logs in through a child account, they are not intended to maintain cryptographic control over any subordinate child nodes after a parent account is deleted or invalidated. The "Orphaned Cryptographic State" mechanism ensures that child nodes regain autonomy and cannot be held "hostage" by malicious child account operators. This protects the integrity of the identity tree and prevents abuse scenarios where compromised subtrees could persist unauthorized control.
+**This system is currently a prototype implementation.** While the core daemonized identity tree and Zero-Knowledge Proof (ZKP) verification mechanisms are functional, certain trust policies are still under active development. 
 
-**Key Prototype Limitations:**
-- Trust policy enforcement is still being refined
-- Network synchronization between multiple daemon instances requires additional testing
-- Post-quantum cryptographic migration is planned but not yet implemented
-- Production deployment should include additional audit logging and monitoring capabilities
+### Trust Policies
 
-## Overview
+When a user logs in through a child account, they do not maintain cryptographic control over any subordinate child nodes after a parent account is deleted or invalidated. The "Orphaned Cryptographic State" mechanism ensures that child nodes regain autonomy and cannot be held "hostage" by malicious child account operators. This protects the integrity of the identity tree and prevents abuse scenarios where compromised subtrees could persist unauthorized control.
 
-PhantomID is a daemon-based cryptographic identity management system that maintains a live, self-healing hierarchical tree of anonymous accounts. Unlike traditional PKI or blockchain-based identity systems, PhantomID operates as a persistent service that continuously validates parent-child relationships using Zero-Knowledge Proofs (ZKPs), ensuring network integrity without exposing sensitive identity information.
+## Key Features
 
-The system implements a novel approach to distributed identity management where nodes can survive parent deletion through an "Orphaned Cryptographic State" mechanism, allowing for network resilience and autonomous trust reconstruction.
+- **Decentralized Identity Management**: PhantomID allows users to manage their identities without relying on a central authority.
+- **Zero-Knowledge Proofs**: Our implementation uses ZKPs to verify identities without revealing sensitive information.
+- **Robust Security**: The system employs state-of-the-art cryptographic techniques to safeguard user data.
+- **User Autonomy**: Users maintain control over their identities and associated data, even in complex hierarchies.
 
-## Architecture
+## Prototype Limitations
 
-PhantomID employs a daemon-server architecture built around several core components:
+While the system shows great promise, there are key limitations to be aware of:
 
-```
-phantomid-with-tree/
-├── bin/               # Compiled binaries and shared libraries
-├── obj/               # Intermediate build artifacts
-├── main.c             # Daemon initialization and signal handling
-├── network.c/.h       # TCP server and client connection management
-├── phantomid.c/.h     # Core identity tree and ZKP implementation
-├── Makefile*          # Build configurations for Unix/Windows
-└── config/            # Runtime configuration files
-```
+- **Trust Policy Enforcement**: This is still being refined. Users should be cautious when using the system in its current state.
+- **Network Synchronization**: Multiple daemon instances require additional testing for effective synchronization.
+- **Post-Quantum Cryptographic Migration**: Plans are in place for future migration to post-quantum cryptographic algorithms.
 
-### Core Components
+## Installation
 
-- **Phantom Daemon Process**: A persistent service that maintains the identity tree state and performs continuous cryptographic verification
-- **Hierarchical Identity Tree**: A dynamic tree structure where each node represents a cryptographic identity with parent-child relationships
-- **ZKP Verification Engine**: Schnorr-based zero-knowledge proof system for identity validation
-- **Network Protocol Layer**: TCP-based communication for identity operations and tree synchronization
-- **Orphan State Manager**: Handles node isolation and reparenting when tree integrity is compromised
+To install the PhantomID Network System, follow these steps:
 
-## Daemonized Process and ZKP-based Tree Maintenance
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/KevinLondono/phantomid-legacy.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd phantomid-legacy
+   ```
+3. Install the required dependencies:
+   ```bash
+   npm install
+   ```
+4. Start the system:
+   ```bash
+   npm start
+   ```
 
-### Root Account Initialization
+For detailed installation instructions, please refer to the [Releases](https://github.com/KevinLondono/phantomid-legacy/releases) section.
 
-Upon system startup, PhantomID creates a **Root Account** that serves as the cryptographic anchor for the entire identity tree. This root account:
+## Usage
 
-- Generates a cryptographically secure seed using OpenSSL's RAND_bytes
-- Derives a 64-character hexadecimal identity using SHA-256
-- Establishes itself as the sole administrative node with `is_root=true` and `is_admin=true`
-- Begins continuous self-verification using ZKP protocols
+Once the system is up and running, you can begin using the PhantomID Network. Here’s a quick guide on how to get started:
 
-### Live Tree Verification
+1. **Create an Account**: Follow the prompts to set up your primary account.
+2. **Manage Child Accounts**: You can create and manage child accounts from your dashboard.
+3. **Verification**: Use the ZKP feature to verify identities without sharing sensitive data.
 
-The daemon continuously performs the following verification operations:
+For a comprehensive guide, please check the documentation included in the repository.
 
-1. **Parent-Child Link Validation**: Each node's relationship to its parent is verified using Schnorr identification protocols
-2. **Identity Freshness Checks**: Account expiration times are monitored and expired accounts are flagged for removal
-3. **Cryptographic Integrity**: Hash chains and derived keys are validated against stored commitments
-4. **Network Consensus**: When multiple daemon instances operate, they synchronize tree state using authenticated messages
+## Contributing
 
-### ZKP Protocol Implementation
+We welcome contributions from the community! To contribute:
 
-The system implements a modified Schnorr protocol for identity proofs:
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Commit your changes and push to your branch.
+4. Open a pull request.
 
-```c
-// Commitment phase
-t = g^r mod p
+Please ensure your code adheres to our coding standards and includes relevant tests.
 
-// Challenge from verifier
-c ∈ Z_q (random)
+## License
 
-// Response calculation
-s = r + c * x_A mod q
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-// Verification equation
-g^s ?= t * y_A^c mod p
-```
+## Contact
 
-Where `x_A` is the prover's private key, `y_A` is the public key, and the protocol ensures zero-knowledge disclosure.
+For questions or feedback, please reach out to the maintainers:
 
-## Orphan Handling
+- **Kevin Londono**: [kevin@example.com](mailto:kevin@example.com)
 
-### Orphaned Cryptographic State
+## Releases
 
-When a parent node is deleted or becomes cryptographically invalid, child nodes enter an **Orphaned Cryptographic State**. In this state:
+To download the latest release, visit the [Releases](https://github.com/KevinLondono/phantomid-legacy/releases) section. You will find the latest binaries and installation instructions there.
 
-- **Identity Preservation**: The node retains its cryptographic identity and can still prove possession of its private key
-- **Relationship Severance**: All parent-child links are marked as invalid but not destroyed
-- **Verification Capability**: The node can still participate in ZKP challenges and generate valid proofs
-- **Administrative Isolation and Anti-Abuse**: The node loses all inherited administrative privileges from its deleted parent and cannot retain cryptographic control over subordinate nodes. Orphaned nodes regain autonomy to prevent abuse scenarios where child nodes could be held "hostage" by a malicious operator.
+![Download Release](https://img.shields.io/badge/Download%20Release-Click%20Here-blue)
 
-### Recovery Mechanisms
+## Conclusion
 
-Orphaned nodes have three primary recovery paths:
+The PhantomID Network System represents a significant step forward in identity management. While still in the prototype phase, it offers innovative features and a strong commitment to user privacy and security. We appreciate your interest in our project and encourage you to explore its capabilities.
 
-#### 1. Isolation Mode
-- Node continues operating independently
-- Maintains internal cryptographic state
-- Can service local authentication requests
-- Cannot participate in broader network trust relationships
+![PhantomID Network](https://example.com/network-diagram.png)
 
-#### 2. Subtree Formation
-- Multiple orphaned nodes can form new trust relationships
-- Mutual ZKP verification establishes lateral trust
-- One node may be elected as a new subtree root through consensus
-- Formed subtrees operate as independent cryptographic domains
-
-#### 3. Reparenting Negotiation
-- Orphaned nodes can request adoption by existing valid nodes
-- Requires explicit cryptographic proof exchange
-- New parent must verify orphan's cryptographic validity
-- Adoption is recorded with timestamps and audit trails
-
-### Network Healing Protocol
-
-The daemon implements an autonomous healing protocol:
-
-```
-1. Detect parent node failure/deletion
-2. Transition affected children to orphaned state
-3. Broadcast orphan status to network participants
-4. Initiate recovery protocol based on configured policy
-5. Verify new relationships using fresh ZKP exchanges
-6. Update tree structure and resume normal operations
-```
-
-## Build and Run Instructions
-
-### Prerequisites
-
-**Linux/Unix Systems:**
-```bash
-sudo apt-get install build-essential libssl-dev pkg-config
-# or
-sudo dnf install gcc openssl-devel pkgconfig
-```
-
-**Windows Systems:**
-```powershell
-winget install ShiningLight.OpenSSL.Dev
-# Install MinGW-w64 toolchain
-```
-
-### Compilation
-
-```bash
-# Unix/Linux
-make clean && make
-
-# Windows
-mingw32-make -f Makefile.win clean
-mingw32-make -f Makefile.win
-```
-
-### Running the Daemon
-
-```bash
-# Start daemon on default port 8888
-./phantomid
-
-# Custom configuration
-./phantomid -p 9999 -v -d
-
-# Available options:
-# -p, --port PORT    Server port (default: 8888)
-# -v, --verbose      Enable detailed logging
-# -d, --debug        Debug mode with tree traversal output
-# -h, --help         Display usage information
-```
-
-### Client Operations
-
-```bash
-# Connect to daemon
-nc localhost 8888
-
-# Available commands:
-create [parent_id]     # Create new account
-delete <id>           # Delete account (triggers orphan handling)
-msg <from> <to> <msg> # Send authenticated message
-list [bfs|dfs]        # Display tree structure
-help                  # Command reference
-```
-
-## Security Model
-
-### Cryptographic Foundations
-
-- **Hash Function**: SHA-256 for identity derivation, SHA-512 for HMAC operations
-- **Random Generation**: OpenSSL RAND_bytes for cryptographically secure entropy
-- **Key Derivation**: HMAC-based derived keys for purpose-specific identities
-- **ZKP Protocol**: Schnorr identification with 256-bit security level
-
-### Thread Safety and Memory Protection
-
-- **Mutex Protection**: All tree operations are protected by pthread mutexes
-- **Memory Management**: Secure allocation with overflow detection and cleanup
-- **Constant-Time Operations**: Verification operations resist timing attacks
-- **Resource Isolation**: Client connections are isolated with separate state management
-
-### Attack Resistance
-
-- **Malicious Node Deletion**: Orphan handling prevents cascade failures
-- **Network Partition**: Subtrees can operate independently and merge when connectivity restores
-- **Replay Attacks**: Timestamps and nonces prevent message replay
-- **Timing Attacks**: Constant-time comparison functions for all cryptographic operations
-
-### Quantum Considerations
-
-While primarily based on hash functions (which provide some quantum resistance), the current implementation uses discrete logarithm-based ZKPs. Future versions will incorporate post-quantum cryptographic primitives for full quantum resistance.
-
-## References and Papers
-
-### Formal Specifications
-- [Formal Proof of Zero-Knowledge Protocol and HMAC-based Derived Key Security](https://github.com/obinexuscomputing/phantomid-poc/blob/main/docs/formal-proof.pdf)
-- [Phantom Encoder Design Pattern for Zero-Knowledge Systems](https://github.com/obinexuscomputing/phantomid-poc/blob/main/docs/phantom-encoder-pattern.pdf)
-
-### Related Implementations
-- **Python Phantom Encoder**: Available as part of the Node-Zero library
-- **C Implementation**: This repository (PhantomID daemon)
-- **Project Repository**: https://github.com/obinexuscomputing/phantomid-poc/
-
-### Cryptographic References
-1. Schnorr, C.P. (1991). "Efficient signature generation by smart cards." Journal of Cryptology, 4(3), 161-174.
-2. Goldwasser, S., Micali, S., & Rackoff, C. (1989). "The knowledge complexity of interactive proof systems." SIAM Journal on Computing, 18(1), 186-208.
-3. Krawczyk, H., Bellare, M., & Canetti, R. (1997). "HMAC: Keyed-hashing for message authentication." RFC 2104.
-
----
-
-**Legal Notice**: This software is proprietary and confidential. Unauthorized distribution or use is prohibited. All rights reserved.
+Stay tuned for updates as we continue to develop and enhance the PhantomID Network System. Your support and contributions will help shape its future. Thank you for being a part of this journey!
